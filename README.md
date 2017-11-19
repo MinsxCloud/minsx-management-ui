@@ -16,4 +16,4 @@
 + Element UI 饿了么基于VUE的前端框架
 + NPM 包管理工具
 + WEB PACK 打包工具
-+ NodeJS 用于服务端渲染及路由控制等
++ NodeJS 用于基础环境及服务端渲染等
