@@ -6,20 +6,20 @@
       <div class="user-info">
         <img class="head-ico" src="./assets/image/head-ico.jpg"/>
         <div class="user-name">
-          <el-dropdown trigger="click">
+          <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link" style="color: white">
                 Administrator<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人资料</el-dropdown-item>
-              <el-dropdown-item>修改密码</el-dropdown-item>
-              <el-dropdown-item>退出系统</el-dropdown-item>
+              <el-dropdown-item command="/user/userInfo">个人资料</el-dropdown-item>
+              <el-dropdown-item command="/user/changePass">修改密码</el-dropdown-item>
+              <el-dropdown-item command="/user/clearSession">清除缓存</el-dropdown-item>
+              <el-dropdown-item command="/user/exit">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </div>
     </div>
-
 
     <div id="nav">
       <el-menu
@@ -63,9 +63,8 @@
       <div id="section-header">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-          <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/user/userInfo' }">个人资料</el-breadcrumb-item>
+          <el-breadcrumb-item>修改密码</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div id="section-content">
@@ -88,6 +87,9 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      handleCommand(command) {
+        this.$router.push(command);
       }
     }
   }
@@ -180,7 +182,6 @@
     overflow: hidden;
   }
 
-
   #section #section-content {
     position: absolute;
     right: 0;
@@ -193,6 +194,7 @@
 
   #footer {
     background-color: #F2F2F2;
+    color: #7F7C7C;
     text-align: center;
     position: absolute;
     bottom: 0px;
