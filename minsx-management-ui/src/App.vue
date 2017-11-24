@@ -61,11 +61,12 @@
 
     <div id="section">
       <div id="section-header">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
+        <!--<el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/user/userInfo' }">个人资料</el-breadcrumb-item>
           <el-breadcrumb-item>修改密码</el-breadcrumb-item>
-        </el-breadcrumb>
+        </el-breadcrumb>-->
+        <Position :positionlist="positionlist"></Position>
       </div>
       <div id="section-content">
         <router-view/>
@@ -79,8 +80,30 @@
 </template>
 
 <script>
+  import MyPosition from './components/common/Position';
   export default {
     name: 'app',
+    data() {
+      return {
+        positionlist: [
+          {
+            path: '/',
+            iconClass: 'el-icon-location-outline',
+            name: '首页'
+          },
+          {
+            path: '/user/userInfo',
+            iconClass: 'el-icon-date',
+            name: '用户信息'
+          },
+          {
+            path: '/user/changePass',
+            iconClass: 'el-icon-view',
+            name: '找回密码'
+          }
+        ]
+      }
+    },
     methods: {
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
@@ -91,6 +114,9 @@
       handleCommand(command) {
         this.$router.push(command);
       }
+    },
+    components:{
+      Position:MyPosition
     }
   }
 </script>
@@ -145,7 +171,7 @@
     color: white;
     line-height: 50px;
     overflow: hidden;
-    cursor:pointer;
+    cursor: pointer;
   }
 
   #nav {

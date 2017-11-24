@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import UserInfo from '@/components/user/UserInfo'
 import ChangePass from '@/components/user/ChangePass'
 
+
 Vue.use(Router)
 
 export default new Router({
