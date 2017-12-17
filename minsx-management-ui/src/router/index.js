@@ -5,7 +5,7 @@ import UserInfo from '@/components/user/UserInfo'
 import ChangePass from '@/components/user/ChangePass'
 
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   mode: 'history',
@@ -13,17 +13,20 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+      meta:{auth:true}
     },
     {
       path: '/user/userInfo',
       name: 'UserInfo',
-      component: UserInfo
+      component: UserInfo,
+      meta:{auth:true}
     },
     {
       path: '/user/changePass',
       name: 'ChangePass',
-      component: ChangePass
+      component: ChangePass,
+      meta:{auth:true}
     }
   ]
-})
+});

@@ -14,7 +14,7 @@
               <el-dropdown-item command="/user/userInfo">个人资料</el-dropdown-item>
               <el-dropdown-item command="/user/changePass">修改密码</el-dropdown-item>
               <el-dropdown-item command="/user/clearSession">清除缓存</el-dropdown-item>
-              <el-dropdown-item command="/user/exit">退出系统</el-dropdown-item>
+              <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -81,6 +81,7 @@
 
 <script>
   import MyPosition from './components/common/Position';
+  import Minsx from './assets/js/minsx.js';
   export default {
     name: 'app',
     data() {
@@ -112,7 +113,12 @@
         console.log(key, keyPath);
       },
       handleCommand(command) {
-        this.$router.push(command);
+        if ("logout"===command){
+          Minsx.Cookie.remove("access_token");
+          window.location.href = 'http://localhost:8080/loginServer/login?redir=http%3A%2F%2Flocalhost';
+        }else{
+          this.$router.push(command);
+        }
       }
     },
     components:{
