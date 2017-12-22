@@ -1,15 +1,16 @@
-import minsx from './minsx.js'
+import Minsx from './minsx.js'
+import Config from './config.js'
 
 const System = {
   checkToken: function (router) {
     router.beforeEach((to, from, next) => {
       if (to.matched.some(m => m.meta.auth)) {
-        if (minsx.Cookie.get("access_token") === null) {
-          window.location.href = 'http://localhost:8080/loginServer/login?redir=http%3A%2F%2Flocalhost';
-        }else{
+        if (Minsx.Cookie.get("access_token") === null) {
+          window.location.href = Config.LOGIN_URI;
+        } else {
           next();
         }
-      }else {
+      } else {
         next();
       }
     });

@@ -7,13 +7,13 @@
         <img class="head-ico" src="./assets/image/head-ico.jpg"/>
         <div class="user-name">
           <el-dropdown trigger="click" @command="handleCommand">
-            <span class="el-dropdown-link" style="color: white">
-                Administrator<i class="el-icon-arrow-down el-icon--right"></i>
+            <span class="el-dropdown-link" style="color: white;text-align:center;">
+              {{userName}} <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="/user/userInfo">个人资料</el-dropdown-item>
               <el-dropdown-item command="/user/changePass">修改密码</el-dropdown-item>
-              <el-dropdown-item command="/user/clearSession">清除缓存</el-dropdown-item>
+              <el-dropdown-item command="clearSession">清除缓存</el-dropdown-item>
               <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -30,32 +30,16 @@
         background-color="#F0F6F6"
         text-color="#3C3F41"
         active-text-color="black">
-        <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>导航一</span>
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="1-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="1-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="1-4-1">选项1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-menu-item index="2">
+
+        <!--<el-menu-item v-for="menuItem in menuItems" index="menuItem.id" :key="menuItem.id">
           <i class="el-icon-menu"></i>
-          <span slot="title">导航二</span>
-        </el-menu-item>
-        <el-menu-item index="3">
-          <i class="el-icon-setting"></i>
-          <span slot="title">导航三</span>
-        </el-menu-item>
+          <span>{{menuItem.alias}}</span>
+        </el-menu-item>-->
+
+        <ul v-for="menuItem in theModel" :key="menuItem.menuCode">
+          <LeftMenu :model="menuItem"></LeftMenu>
+        </ul>
+
       </el-menu>
     </div>
 
@@ -80,12 +64,86 @@
 </template>
 
 <script>
-  import MyPosition from './components/common/Position';
+  import MyPosition from './components/common/Position.vue';
   import Minsx from './assets/js/minsx.js';
+  import Axios from './assets/js/axios.js';
+  import Config from './assets/js/config.js';
+  import LeftMenu from './components/common/LeftMenu.vue'
+
   export default {
     name: 'app',
     data() {
       return {
+        theModel : [
+          {
+            'id': '1',
+            'menuName': '基础管理',
+            'menuCode': '10',
+            'children': [
+              {
+                'menuName': '用户管理',
+                'menuCode': '11'
+              },
+              {
+                'menuName': '角色管理',
+                'menuCode': '12',
+                'children': [
+                  {
+                    'menuName': '管理员',
+                    'menuCode': '121'
+                  },
+                  {
+                    'menuName': 'CEO',
+                    'menuCode': '122'
+                  },
+                  {
+                    'menuName': 'CFO',
+                    'menuCode': '123'
+                  },
+                  {
+                    'menuName': 'COO',
+                    'menuCode': '124'
+                  },
+                  {
+                    'menuName': '普通人',
+                    'menuCode': '124'
+                  }
+                ]
+              },
+              {
+                'menuName': '权限管理',
+                'menuCode': '13'
+              }
+            ]
+          },
+          {
+            'id': '2',
+            'menuName': '商品管理',
+            'menuCode': ''
+          },
+          {
+            'id': '3',
+            'menuName': '订单管理',
+            'menuCode': '30',
+            'children': [
+              {
+                'menuName': '订单列表',
+                'menuCode': '31'
+              },
+              {
+                'menuName': '退货列表',
+                'menuCode': '32',
+                'children': []
+              }
+            ]
+          },
+          {
+            'id': '4',
+            'menuName': '商家管理',
+            'menuCode': '',
+            'children': []
+          }
+        ],
         positionlist: [
           {
             path: '/',
@@ -102,7 +160,21 @@
             iconClass: 'el-icon-view',
             name: '找回密码'
           }
-        ]
+        ],
+        menuItems: [
+          {alias: '菜单一'},
+          {alias: '菜单二'},
+          {
+            alias: '菜单三',
+            childs: [
+              {alias: '子菜单一'},
+              {alias: '子菜单二'}
+            ]
+          },
+          {alias: '菜单四'},
+          {alias: '菜单五'}
+        ],
+        userName: ''
       }
     },
     methods: {
@@ -113,22 +185,37 @@
         console.log(key, keyPath);
       },
       handleCommand(command) {
-        if ("logout"===command){
+        if ("logout" === command) {
           Minsx.Cookie.remove("access_token");
-          window.location.href = 'http://localhost:8080/loginServer/login?redir=http%3A%2F%2Flocalhost';
-        }else{
+          window.location.href = Config.LOGIN_URI;
+        } else if ('clearSession' === command) {
+
+        } else {
           this.$router.push(command);
         }
-      }
+      },
+      getUserName() {
+        Axios.get('/user/currentUserInfo')
+          .then(response => {
+            this.userName = response.data.userNick;
+          }).catch(error => {
+          console.log(error);
+        });
+      },
     },
-    components:{
-      Position:MyPosition
+    created: function () {
+      this.getUserName();
+    },
+
+    components: {
+      Position: MyPosition,
+      LeftMenu:LeftMenu
     }
   }
 </script>
 
 <style>
-  /* Powered by minsx.com*/
+  /* Powered by Minsx.com*/
   body, html {
     padding: 0;
     margin: 0;
@@ -220,7 +307,7 @@
     top: 25px;
     left: 0;
     bottom: 0;
-    padding: 5px;
+    padding: 30px;
     overflow: auto;
   }
 

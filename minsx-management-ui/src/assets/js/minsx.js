@@ -39,15 +39,49 @@ const Minsx = {
     }
   },
   Http: {
-    get: function (url, async) {
-      xmlhttp.open("GET", url, async);
+    get: function (url, data, success, error) {
+      Minsx.Http.request("GET", url, false, data, success, error);
     },
-    post: function (url, async) {
-      xmlhttp.open("POST", url, async);
-      xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    delete:function (url, data, success, error) {
+       Minsx.Http.request("DELETE", url, false, data, success, error);
+    },
+    put:function (url, data, success, error) {
+      Minsx.Http.request("PUT", url, false, data, success, error);
+    },
+    putJson:function (url, data, success, error) {
+      Minsx.Http.request("PUT", url, true, data, success, error);
+    },
+    post: function (url, data, success, error) {
+      Minsx.Http.request("POST", url, false, data, success, error);
+    },
+    postJson: function (url, data, success, error) {
+      Minsx.Http.request("POST", url, true, data, success, error);
+    },
+    request: function (type, url, data, isJson, success, error) {
+      const xmlHttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+      xmlHttp.open(type, url, true);
+      isJson ? xmlHttp.setRequestHeader("Content-Type", "application/json") : xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState === 4) {
+          if (xmlHttp.status === 200) {
+            success(xmlHttp.response);
+          } else {
+            error(xmlHttp.response);
+          }
+        }
+      }
+      xmlHttp.send(data);
     }
   },
   Cookie: {
+    get: function (key) {
+      let arr, reg = new RegExp("(^| )" + key + "=([^;]*)(;|$)");
+      if (arr = document.cookie.match(reg)) {
+        return unescape(arr[2]);
+      } else {
+        return null;
+      }
+    },
     set: function () {
       const args = arguments;
       if (args.length === 2) {
@@ -56,14 +90,6 @@ const Minsx = {
         document.cookie = args[0] + "=" + escape(args[1]) + ";path=" + args[2];
       } else if (args.length === 4) {
         document.cookie = args[0] + "=" + escape(args[1]) + ";path=" + args[2] + ";domain=" + args[3];
-      }
-    },
-    get: function (key) {
-      let arr, reg = new RegExp("(^| )" + key + "=([^;]*)(;|$)");
-      if (arr = document.cookie.match(reg)) {
-        return unescape(arr[2]);
-      } else {
-        return null;
       }
     },
     remove: function (key) {
