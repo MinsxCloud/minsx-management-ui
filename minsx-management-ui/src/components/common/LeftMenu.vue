@@ -1,19 +1,19 @@
 <template>
   <div class="LeftMenu">
 
-    <el-submenu v-if="menuItem.childs&&menuItem.entity&&menuItem.entity.state==='ENABLE'" v-for="menuItem in menuItems"
-                :key="menuItem.entity.id" :data="menuItem" :index="menuItem.entity.name">
+    <el-submenu v-if="menu.childs&&menu.entity&&menu.entity.state==='ENABLE'" v-for="menu in menus"
+                :key="menu.entity.id" :data="menu" :index="menu.entity.name">
       <template slot="title">
-        <i :class="menuItem.entity.icon"></i>
-        <span> {{menuItem.entity.alias}}</span>
+        <i :class="menu.entity.icon"></i>
+        <span> {{menu.entity.alias}}</span>
       </template>
-      <LeftMenu :menuItems="menuItem.childs"></LeftMenu>
+      <LeftMenu :menus="menu.childs"></LeftMenu>
     </el-submenu>
 
-    <el-menu-item v-if="menuItem.childs==null&&menuItem.entity&&menuItem.entity.state==='ENABLE'" v-for="menuItem in menuItems"
-                  :key="menuItem.entity.id" :data="menuItem" :index="menuItem.entity.name">
-      <i :class="menuItem.entity.icon"></i>
-      <span slot="title">{{menuItem.entity.alias}}</span>
+    <el-menu-item v-if="menu.childs==null&&menu.entity&&menu.entity.state==='ENABLE'" v-for="menu in menus"
+                  :key="menu.entity.id" :data="menu" :index="menu.entity.name">
+      <i :class="menu.entity.icon"></i>
+      <span slot="title">{{menu.entity.alias}}</span>
     </el-menu-item>
 
   </div>
@@ -22,7 +22,7 @@
 <script>
   export default {
     name: 'LeftMenu',
-    props: ['menuItems'],
+    props: ['menus'],
     data() {
       return {}
     },

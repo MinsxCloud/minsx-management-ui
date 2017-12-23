@@ -8,11 +8,11 @@
         <div class="user-name">
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link" style="color: white;text-align:center;">
-              {{userName}} <i class="el-icon-arrow-down el-icon--right"></i>
+              {{userInfo.userNick}} <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="/user/userInfo">个人资料</el-dropdown-item>
-              <el-dropdown-item command="/user/changePass">修改密码</el-dropdown-item>
+              <el-dropdown-item command="userInfo">个人资料</el-dropdown-item>
+              <el-dropdown-item command="changePass">修改密码</el-dropdown-item>
               <el-dropdown-item command="clearSession">清除缓存</el-dropdown-item>
               <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
@@ -23,14 +23,14 @@
 
     <div id="nav">
       <el-menu
-        default-active="2"
+        default-active="0"
         class="el-menu-vertical-demo"
         @select="menuSelected"
         background-color="#F0F6F6"
         text-color="#3C3F41"
         active-text-color="black">
         <!--左侧菜单组件-->
-        <LeftMenu :menuItems="menuItems"></LeftMenu>
+        <LeftMenu :menus="menus"></LeftMenu>
       </el-menu>
     </div>
 
@@ -61,9 +61,9 @@
     name: 'app',
     data() {
       return {
-        menuItems: [],
+        menus: [],
         positions: [],
-        userName: ''
+        userInfo: {}
       }
     },
     methods: {
@@ -73,22 +73,36 @@
           this.$router.push(menu.value);
         }
         this.positions = getPositionsByMenus(value);
-        //console.log(key, keyPath, value);
       },
       handleCommand(command) {
         if ("logout" === command) {
           Minsx.Cookie.remove("access_token");
           window.location.href = Config.LOGIN_URI;
         } else if ('clearSession' === command) {
-
+          /*清除缓存*/
         } else {
-          this.$router.push(command);
+          let position = {};
+          if (command === 'userInfo') {
+            position = {
+              value: '/user/userInfo',
+              icon: 'el-icon-info',
+              alias: '个人资料'
+            };
+          } else if (command === 'changePass') {
+            position = {
+              value: '/user/changePass',
+              icon: 'el-icon-view',
+              alias: '修改密码'
+            };
+          }
+          this.positions = [position];
+          this.$router.push(position.value);
         }
       },
       getUserName() {
         Axios.get('/user/currentUserInfo')
           .then(response => {
-            this.userName = response.data.userNick;
+            this.userInfo = response.data;
           }).catch(error => {
           console.log(error);
         });
@@ -96,7 +110,7 @@
       getMenuItems() {
         Axios.get('/system/menus')
           .then(response => {
-            this.menuItems = response.data.childs;
+            this.menus = response.data.childs;
           }).catch(error => {
           console.log(error);
         });
@@ -113,14 +127,14 @@
     }
   }
 
-
+  /*根据选取菜单改变导航面包屑*/
   function getPositionsByMenus(value) {
     let positions = [];
     let currnetMenu = value;
     while (typeof(currnetMenu.$attrs.data) !== "undefined") {
       let menu = currnetMenu.$attrs.data.entity;
       positions.push({
-        value: menu.value===null?null:(menu.value===''?null:"/" +menu.value),
+        value: menu.value === null ? null : (menu.value === '' ? null : "/" + menu.value),
         icon: menu.icon,
         alias: menu.alias
       });
