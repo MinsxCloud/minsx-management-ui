@@ -25,32 +25,19 @@
       <el-menu
         default-active="2"
         class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
+        @select="menuSelected"
         background-color="#F0F6F6"
         text-color="#3C3F41"
         active-text-color="black">
-
-        <!--<el-menu-item v-for="menuItem in menuItems" index="menuItem.id" :key="menuItem.id">
-          <i class="el-icon-menu"></i>
-          <span>{{menuItem.alias}}</span>
-        </el-menu-item>-->
-
-        <ul v-for="menuItem in theModel" :key="menuItem.menuCode">
-          <LeftMenu :model="menuItem"></LeftMenu>
-        </ul>
-
+        <!--左侧菜单组件-->
+        <LeftMenu :menuItems="menuItems"></LeftMenu>
       </el-menu>
     </div>
 
     <div id="section">
       <div id="section-header">
-        <!--<el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/user/userInfo' }">个人资料</el-breadcrumb-item>
-          <el-breadcrumb-item>修改密码</el-breadcrumb-item>
-        </el-breadcrumb>-->
-        <Position :positionlist="positionlist"></Position>
+        <!--内容顶部当前位置组件-->
+        <Position :positions="positions"></Position>
       </div>
       <div id="section-content">
         <router-view/>
@@ -64,125 +51,29 @@
 </template>
 
 <script>
-  import MyPosition from './components/common/Position.vue';
+  import Position from './components/common/Position.vue';
+  import LeftMenu from './components/common/LeftMenu.vue'
   import Minsx from './assets/js/minsx.js';
   import Axios from './assets/js/axios.js';
   import Config from './assets/js/config.js';
-  import LeftMenu from './components/common/LeftMenu.vue'
 
   export default {
     name: 'app',
     data() {
       return {
-        theModel : [
-          {
-            'id': '1',
-            'menuName': '基础管理',
-            'menuCode': '10',
-            'children': [
-              {
-                'menuName': '用户管理',
-                'menuCode': '11'
-              },
-              {
-                'menuName': '角色管理',
-                'menuCode': '12',
-                'children': [
-                  {
-                    'menuName': '管理员',
-                    'menuCode': '121'
-                  },
-                  {
-                    'menuName': 'CEO',
-                    'menuCode': '122'
-                  },
-                  {
-                    'menuName': 'CFO',
-                    'menuCode': '123'
-                  },
-                  {
-                    'menuName': 'COO',
-                    'menuCode': '124'
-                  },
-                  {
-                    'menuName': '普通人',
-                    'menuCode': '124'
-                  }
-                ]
-              },
-              {
-                'menuName': '权限管理',
-                'menuCode': '13'
-              }
-            ]
-          },
-          {
-            'id': '2',
-            'menuName': '商品管理',
-            'menuCode': ''
-          },
-          {
-            'id': '3',
-            'menuName': '订单管理',
-            'menuCode': '30',
-            'children': [
-              {
-                'menuName': '订单列表',
-                'menuCode': '31'
-              },
-              {
-                'menuName': '退货列表',
-                'menuCode': '32',
-                'children': []
-              }
-            ]
-          },
-          {
-            'id': '4',
-            'menuName': '商家管理',
-            'menuCode': '',
-            'children': []
-          }
-        ],
-        positionlist: [
-          {
-            path: '/',
-            iconClass: 'el-icon-location-outline',
-            name: '首页'
-          },
-          {
-            path: '/user/userInfo',
-            iconClass: 'el-icon-date',
-            name: '用户信息'
-          },
-          {
-            path: '/user/changePass',
-            iconClass: 'el-icon-view',
-            name: '找回密码'
-          }
-        ],
-        menuItems: [
-          {alias: '菜单一'},
-          {alias: '菜单二'},
-          {
-            alias: '菜单三',
-            childs: [
-              {alias: '子菜单一'},
-              {alias: '子菜单二'}
-            ]
-          },
-          {alias: '菜单四'},
-          {alias: '菜单五'}
-        ],
+        menuItems: [],
+        positions: [],
         userName: ''
       }
     },
     methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
+      menuSelected(key, keyPath, value) {
+        let menu = value.$attrs.data.entity;
+        if (menu.type === 'LINK') {
+          this.$router.push(menu.value);
+        }
+        this.positions = getPositionsByMenus(value);
+        //console.log(key, keyPath, value);
       },
       handleCommand(command) {
         if ("logout" === command) {
@@ -202,16 +93,42 @@
           console.log(error);
         });
       },
+      getMenuItems() {
+        Axios.get('/system/menus')
+          .then(response => {
+            this.menuItems = response.data.childs;
+          }).catch(error => {
+          console.log(error);
+        });
+      }
     },
     created: function () {
       this.getUserName();
+      this.getMenuItems();
     },
 
     components: {
-      Position: MyPosition,
-      LeftMenu:LeftMenu
+      Position: Position,
+      LeftMenu: LeftMenu
     }
   }
+
+
+  function getPositionsByMenus(value) {
+    let positions = [];
+    let currnetMenu = value;
+    while (typeof(currnetMenu.$attrs.data) !== "undefined") {
+      let menu = currnetMenu.$attrs.data.entity;
+      positions.push({
+        value: menu.value===null?null:(menu.value===''?null:"/" +menu.value),
+        icon: menu.icon,
+        alias: menu.alias
+      });
+      currnetMenu = currnetMenu.$parent.$parent;
+    }
+    return positions.reverse();
+  }
+
 </script>
 
 <style>
