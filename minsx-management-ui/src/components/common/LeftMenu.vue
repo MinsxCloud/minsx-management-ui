@@ -11,7 +11,7 @@
     </el-submenu>
 
     <el-menu-item v-if="menu.childs==null&&menu.entity&&menu.entity.state==='ENABLE'" v-for="menu in menus"
-                  :key="menu.entity.id" :data="menu" :index="menu.entity.name">
+                  :key="menu.entity.id" :data="menu" :index="menu.entity.name" :route="menu.entity.value" disabled="">
       <i :class="menu.entity.icon"></i>
       <span slot="title">{{menu.entity.alias}}</span>
     </el-menu-item>

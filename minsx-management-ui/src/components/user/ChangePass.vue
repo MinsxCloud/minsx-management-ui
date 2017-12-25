@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="form" label-width="80px">
+  <el-form ref="form" :model="form" labelWidth="80px">
     <el-form-item label="原密码">
       <el-input v-model="form.oldPass"></el-input>
     </el-form-item>
