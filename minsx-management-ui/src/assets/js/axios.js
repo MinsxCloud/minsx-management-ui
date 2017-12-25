@@ -34,8 +34,8 @@ const Axios = {
   delete(url, param) {
     return instance.delete(url, {params: param});
   },
-  post(url, param) {
-    return instance.post(url, {params: param});
+  post(url, body,param) {
+    return instance.post(url, body, {params: param});
   },
   postJson(url, body, param) {
     let option = {
@@ -44,8 +44,8 @@ const Axios = {
     if (param) option.params = param;
     return instance.post(url, body, option);
   },
-  put(url, param) {
-    return instance.put(url, {params: param});
+  put(url, body, param) {
+    return instance.put(url, body, {params: param});
   },
   putJson(url, body, param) {
     let option = {
