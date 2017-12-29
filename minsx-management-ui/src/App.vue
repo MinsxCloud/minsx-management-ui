@@ -108,7 +108,7 @@
         });
       },
       getMenuItems() {
-        Axios.get('/system/menus')
+        Axios.get('/menu/menus')
           .then(response => {
             this.menus = response.data.childs;
           }).catch(error => {
