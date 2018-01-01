@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <div id="header">
       <div class="logo"></div>
       <div class="user-info">
@@ -99,6 +98,13 @@
           this.$router.push(position.value);
         }
       },
+      initialPosition() {
+        this.positions = [{
+          value: '/',
+          icon: 'el-icon-success',
+          alias: '系统首页'
+        }];
+      },
       getUserName() {
         Axios.get('/user/currentUserInfo')
           .then(response => {
@@ -117,6 +123,7 @@
       }
     },
     created: function () {
+      this.initialPosition();
       this.getUserName();
       this.getMenuItems();
     },
@@ -238,7 +245,7 @@
     top: 25px;
     left: 0;
     bottom: 0;
-    padding: 30px;
+    padding: 20px;
     overflow: auto;
   }
 
