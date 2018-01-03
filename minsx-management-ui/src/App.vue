@@ -2,12 +2,26 @@
   <div id="app">
     <div id="header">
       <div class="logo"></div>
+      <div id="topMenu">
+        <!--顶部菜单导航-->
+        <el-menu
+          default-active="0"
+          mode="horizontal"
+          class="el-menu-vertical-demo"
+          @select="menuSelected"
+          backgroundColor="#3C3F41"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+          <NavMenu :navMenus="topMenus"></NavMenu>
+        </el-menu>
+      </div>
+
       <div class="user-info">
         <img class="head-ico" src="./assets/image/head-ico.jpg"/>
         <div class="user-name">
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link" style="color: white;text-align:center;">
-              {{userInfo.userNick}} <i class="el-icon-arrow-down el-icon--right"></i>
+              {{userInfo.userNick?userInfo.userNick:userInfo.username}} <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人资料</el-dropdown-item>
@@ -21,6 +35,7 @@
     </div>
 
     <div id="nav">
+      <!--左侧菜单组件-->
       <el-menu
         default-active="0"
         class="el-menu-vertical-demo"
@@ -28,8 +43,7 @@
         background-color="#F0F6F6"
         text-color="#3C3F41"
         active-text-color="black">
-        <!--左侧菜单组件-->
-        <LeftMenu :menus="menus"></LeftMenu>
+        <NavMenu :navMenus="leftMenus"></NavMenu>
       </el-menu>
     </div>
 
@@ -51,7 +65,7 @@
 
 <script>
   import Position from './components/common/Position.vue';
-  import LeftMenu from './components/common/LeftMenu.vue'
+  import NavMenu from './components/common/NavMenu.vue'
   import Minsx from './assets/js/minsx.js';
   import Axios from './assets/js/axios.js';
   import Config from './assets/js/config.js';
@@ -60,7 +74,8 @@
     name: 'app',
     data() {
       return {
-        menus: [],
+        topMenus: [],
+        leftMenus: [],
         positions: [],
         userInfo: {}
       }
@@ -68,6 +83,14 @@
     methods: {
       menuSelected(key, keyPath, value) {
         let menu = value.$attrs.data.entity;
+        if (menu.classifier === 'TOP') {
+          if (menu.type === 'MENU') {
+            this.getLeftMenus(menu.id);
+          }
+        } else if (menu.classifier === 'TOP') {
+
+        }
+        /*公共部分*/
         if (menu.type === 'LINK') {
           this.$router.push(menu.value);
         }
@@ -75,7 +98,7 @@
       },
       handleCommand(command) {
         if ("logout" === command) {
-          Minsx.Cookie.remove("access_token");
+          Minsx.Cookie.set("access_token","UnKnown","/");
           window.location.href = Config.LOGIN_URI;
         } else if ('clearSession' === command) {
           /*清除缓存*/
@@ -113,10 +136,19 @@
           console.log(error);
         });
       },
-      getMenuItems() {
-        Axios.get('/menu/menus')
+      getLeftMenus(parentMenuId) {
+        Axios.get('/menu/leftMenus/' + parentMenuId)
           .then(response => {
-            this.menus = response.data.childs;
+            this.leftMenus = response.data.childs;
+          }).catch(error => {
+          console.log(error);
+        });
+      },
+      getTopMenus() {
+        Axios.get('/menu/topMenus')
+          .then(response => {
+            this.topMenus = response.data.childs;
+            this.getLeftMenus(1);
           }).catch(error => {
           console.log(error);
         });
@@ -125,12 +157,12 @@
     created: function () {
       this.initialPosition();
       this.getUserName();
-      this.getMenuItems();
+      this.getTopMenus();
     },
 
     components: {
       Position: Position,
-      LeftMenu: LeftMenu
+      NavMenu: NavMenu
     }
   }
 
@@ -175,6 +207,14 @@
     background: url(./assets/image/logo.png) no-repeat left center;
     background-size: 80%;
     background-position-x: 20px;
+  }
+
+  #topMenu {
+    position: absolute;
+    top: 0;
+    left: 206px;
+    height: 60px;
+    background-color: #3C3F41;
   }
 
   #header .user-info {

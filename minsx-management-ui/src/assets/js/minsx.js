@@ -42,13 +42,13 @@ const Minsx = {
     get: function (url, data, success, error) {
       Minsx.Http.request("GET", url, false, data, success, error);
     },
-    delete:function (url, data, success, error) {
-       Minsx.Http.request("DELETE", url, false, data, success, error);
+    delete: function (url, data, success, error) {
+      Minsx.Http.request("DELETE", url, false, data, success, error);
     },
-    put:function (url, data, success, error) {
+    put: function (url, data, success, error) {
       Minsx.Http.request("PUT", url, false, data, success, error);
     },
-    putJson:function (url, data, success, error) {
+    putJson: function (url, data, success, error) {
       Minsx.Http.request("PUT", url, true, data, success, error);
     },
     post: function (url, data, success, error) {
@@ -93,12 +93,9 @@ const Minsx = {
       }
     },
     remove: function (key) {
-      const cval = Minsx.Cookie.get(key);
-      if (cval !== null) {
-        const exp = new Date();
-        exp.setTime(exp.getTime() - 1);
-        document.cookie = key + "=" + cval + ";expires=" + exp.toGMTString();
-      }
+      const myDate = new Date();
+      myDate.setTime(-1000);
+      document.cookie = key + "=''; expires=" + myDate.toGMTString();
     }
   }
 }
