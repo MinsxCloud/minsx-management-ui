@@ -4,7 +4,6 @@ import Index from '@/components/Index'
 import UserInfo from '@/components/user/UserInfo'
 import ChangePass from '@/components/user/ChangePass'
 
-
 Vue.use(Router);
 
 export default new Router({
@@ -14,19 +13,19 @@ export default new Router({
       path: '/',
       name: 'Index',
       component: Index,
-      meta:{auth:true}
+      meta: {auth: true}
     },
     {
       path: '/user/userInfo',
       name: 'UserInfo',
       component: UserInfo,
-      meta:{auth:true}
+      meta: {auth: true}
     },
     {
       path: '/user/changePass',
       name: 'ChangePass',
       component: ChangePass,
-      meta:{auth:true}
+      meta: {auth: true}
     }
   ]
 });

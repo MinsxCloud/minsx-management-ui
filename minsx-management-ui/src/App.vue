@@ -21,7 +21,8 @@
         <div class="user-name">
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link" style="color: white;text-align:center;">
-              {{userInfo.userNick?userInfo.userNick:userInfo.username}} <i class="el-icon-arrow-down el-icon--right"></i>
+              {{userInfo.userNick ? userInfo.userNick : userInfo.username}} <i
+              class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人资料</el-dropdown-item>
@@ -69,6 +70,8 @@
   import Minsx from './assets/js/minsx.js';
   import Axios from './assets/js/axios.js';
   import Config from './assets/js/config.js';
+  import Cookies from 'js-cookie';
+
 
   export default {
     name: 'app',
@@ -98,7 +101,7 @@
       },
       handleCommand(command) {
         if ("logout" === command) {
-          Minsx.Cookie.set("access_token","UnKnown","/");
+          Cookies.remove('access_token', { domain:Config.COOKIE_DOMAIN,path: '/' });
           window.location.href = Config.LOGIN_URI;
         } else if ('clearSession' === command) {
           /*清除缓存*/
@@ -159,7 +162,6 @@
       this.getUserName();
       this.getTopMenus();
     },
-
     components: {
       Position: Position,
       NavMenu: NavMenu

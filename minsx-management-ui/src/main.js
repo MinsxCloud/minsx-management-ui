@@ -5,14 +5,12 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import './assets/theme/index.css'
-import System from './assets/js/system.js';
 
-System.checkToken(router);
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App}
+  components: {App}
 });
