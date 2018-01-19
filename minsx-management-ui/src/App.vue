@@ -7,12 +7,11 @@
         <el-menu
           default-active="0"
           mode="horizontal"
-          class="el-menu-vertical-demo"
           @select="menuSelected"
-          backgroundColor="#3C3F41"
-          text-color="#fff"
-          active-text-color="#ffd04b">
-          <NavMenu :navMenus="topMenus"></NavMenu>
+          backgroundColor="#1DA028"
+          text-color="white"
+          active-text-color="#FFD04B">
+          <NavMenu :menuData="topMenus" :showEnableOnly="showEnableOnly"></NavMenu>
         </el-menu>
       </div>
 
@@ -42,9 +41,9 @@
         class="el-menu-vertical-demo"
         @select="menuSelected"
         background-color="#F0F6F6"
-        text-color="#3C3F41"
+        text-color="#1DA028"
         active-text-color="black">
-        <NavMenu :navMenus="leftMenus"></NavMenu>
+        <NavMenu :menuData="leftMenus" :showEnableOnly="showEnableOnly"></NavMenu>
       </el-menu>
     </div>
 
@@ -72,11 +71,11 @@
   import Config from './assets/js/config.js';
   import Cookies from 'js-cookie';
 
-
   export default {
     name: 'app',
     data() {
       return {
+        showEnableOnly: true,
         topMenus: [],
         leftMenus: [],
         positions: [],
@@ -90,12 +89,14 @@
           if (menu.type === 'MENU') {
             this.getLeftMenus(menu.id);
           }
-        } else if (menu.classifier === 'TOP') {
+        } else if (menu.classifier === 'LEFT') {
 
         }
         /*公共部分*/
         if (menu.type === 'LINK') {
-          this.$router.push(menu.value);
+          if (menu.value!==null&&menu.value!==''){
+            this.$router.push(menu.value);
+          }
         }
         this.positions = getPositionsByMenus(value);
       },
@@ -195,12 +196,11 @@
   }
 
   #header {
-    background-color: #3C3F41;
+    background-color: #1DA028;
     position: absolute;
     left: 0;
     right: 0;
-    height: 59px;
-    border-bottom: 1px solid #555555;
+    height: 60px;
   }
 
   #header .logo {
@@ -216,7 +216,7 @@
     top: 0;
     left: 206px;
     height: 60px;
-    background-color: #3C3F41;
+    background-color: #1DA028;
   }
 
   #header .user-info {
@@ -254,8 +254,9 @@
     position: absolute;
     top: 60px;
     bottom: 50px;
-    left: 0px;
+    left: 0;
     overflow: hidden;
+    border-top: 2px solid #FFD04B;
   }
 
   #section {
@@ -266,6 +267,7 @@
     left: 205px;
     right: 0;
     border-left: 1px solid #A9A9A9;
+    border-top: 2px solid #FFD04B;
     overflow: auto;
   }
 
@@ -303,7 +305,7 @@
     right: 0;
     padding: 5px;
     border-top: 1px solid #A9A9A9;
-    border-bottom: 5px solid #3C3F41;
+    border-bottom: 5px solid #1DA028;
   }
 
 
