@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import './assets/theme/index.css'
+import './assets/font/minsx-icon-font/iconfont.css'
+import './assets/font/minsx-backend/iconfont.css'
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);

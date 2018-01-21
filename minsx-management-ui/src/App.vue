@@ -10,8 +10,9 @@
           @select="menuSelected"
           backgroundColor="#1DA028"
           text-color="white"
-          active-text-color="#FFD04B">
-          <NavMenu :menuData="topMenus" :showEnableOnly="showEnableOnly"></NavMenu>
+          active-text-color="white">
+          <NavMenu :menuData="topMenus" :showEnableOnly="showEnableOnly" :textColor="'white'" :iconColor="'white'"
+                   :iconSize="'24px'"></NavMenu>
         </el-menu>
       </div>
 
@@ -40,10 +41,12 @@
         default-active="0"
         class="el-menu-vertical-demo"
         @select="menuSelected"
+        :default-openeds="defaultOpeneds"
         background-color="#F0F6F6"
         text-color="#1DA028"
-        active-text-color="black">
-        <NavMenu :menuData="leftMenus" :showEnableOnly="showEnableOnly"></NavMenu>
+        active-text-color="white">
+        <NavMenu :menuData="leftMenus" :showEnableOnly="showEnableOnly" :textColor="'#E4AE1C'" :iconColor="'#E4AE1C'"
+                 :iconSize="'16px'"></NavMenu>
       </el-menu>
     </div>
 
@@ -75,6 +78,7 @@
     name: 'app',
     data() {
       return {
+        defaultOpeneds: [],
         showEnableOnly: true,
         topMenus: [],
         leftMenus: [],
@@ -94,15 +98,21 @@
         }
         /*公共部分*/
         if (menu.type === 'LINK') {
-          if (menu.value!==null&&menu.value!==''){
+          if (menu.value !== null && menu.value !== '') {
             this.$router.push(menu.value);
+          } else {
+            this.$notify.success({
+              title: 'Info',
+              message: '对不起['+menu.alias+']暂未开通  您可以关注Minsx主页[www.minsx.com]随时获取项目进度!',
+              showClose: false
+            });
           }
         }
         this.positions = getPositionsByMenus(value);
       },
       handleCommand(command) {
         if ("logout" === command) {
-          Cookies.remove('access_token', { domain:Config.COOKIE_DOMAIN,path: '/' });
+          Cookies.remove('access_token', {domain: Config.COOKIE_DOMAIN, path: '/'});
           window.location.href = Config.LOGIN_URI;
         } else if ('clearSession' === command) {
           /*清除缓存*/
@@ -144,6 +154,9 @@
         Axios.get('/menu/leftMenus/' + parentMenuId)
           .then(response => {
             this.leftMenus = response.data.childs;
+            this.leftMenus.forEach(child => {
+              this.defaultOpeneds.push(child.entity.name);
+            });
           }).catch(error => {
           console.log(error);
         });
@@ -252,7 +265,7 @@
     width: 205px;
     float: left;
     position: absolute;
-    top: 60px;
+    top: 58px;
     bottom: 50px;
     left: 0;
     overflow: hidden;
@@ -262,7 +275,7 @@
   #section {
     float: left;
     position: absolute;
-    top: 60px;
+    top: 58px;
     bottom: 50px;
     left: 205px;
     right: 0;
@@ -308,5 +321,7 @@
     border-bottom: 5px solid #1DA028;
   }
 
-
+  .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active {
+    background-color: #2FA93A !important;
+  }
 </style>

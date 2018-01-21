@@ -4,7 +4,7 @@
     <el-row>
       <el-col :span="6" style="overflow: hidden">
         <el-menu
-          default-active="0"
+          default-active="monitor"
           class="el-menu-vertical-demo"
           @select="menuSelected"
           @open="menuSelected"
@@ -12,8 +12,8 @@
           :default-openeds="defaultOpeneds"
           background-color="white"
           text-color="#1DA028"
-          active-text-color="black">
-          <NavMenu :menuData="menuData" :showEnableOnly="showEnableOnly"></NavMenu>
+          active-text-color="white">
+          <NavMenu :menuData="menuData" :showEnableOnly="showEnableOnly" :textColor="'#E4AE1C'" :iconColor="'#E4AE1C'" :iconSize="'16px'"> </NavMenu>
         </el-menu>
       </el-col>
       <el-col :span="18" style="padding-left: 30px;padding-right: 30px">
@@ -65,9 +65,9 @@
               </el-form-item>
 
               <el-form-item>
-                <el-button type="primary" @click="updateMenu('menuForm')">保存</el-button>
+                <el-button type="primary" @click="updateMenu()">保存</el-button>
                 <el-button type="primary" @click="deleteMenu()">删除</el-button>
-                <el-button type="primary" @click="resetForm('menuForm')">重置</el-button>
+                <el-button type="primary" @click="resetForm()">重置</el-button>
               </el-form-item>
             </el-form>
           </el-main>
@@ -120,8 +120,8 @@
           console.log(error);
         });
       },
-      updateMenu(formName) {
-        this.$refs[formName].validate((valid) => {
+      updateMenu() {
+        this.$refs['menuForm'].validate((valid) => {
           if (valid) {
             Axios.putJson('/menu/menus', this.formToMenuEntity(this.formData), null)
               .then(response => {
@@ -131,11 +131,13 @@
                     type: 'success'
                   });
                   this.getMenus();
-                } else {
-                  this.$message.error('保存失败');
                 }
               }).catch(error => {
-                console.log(error);
+                if (error.response.status === 404) {
+                  this.$message.warning('该菜单不存在,请尝试刷新页面后再进行操作');
+                }else{
+                  this.$message.error('保存失败');
+                }
               });
           } else {
             return false;
@@ -226,6 +228,5 @@
 </script>
 
 <style scoped>
-
 
 </style>
