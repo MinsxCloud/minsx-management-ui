@@ -10,17 +10,17 @@
           @open="menuSelected"
           @close="menuSelected"
           :default-openeds="defaultOpeneds"
-          background-color="white"
+          background-color="#F0F6F6"
           text-color="#1DA028"
           active-text-color="white">
-          <NavMenu :menuData="menuData" :showEnableOnly="showEnableOnly" :textColor="'#E4AE1C'" :iconColor="'#E4AE1C'" :iconSize="'16px'"> </NavMenu>
+          <NavMenu class="MenuSetting" :menuData="menuData" :showEnableOnly="showEnableOnly" :iconSize="'16px'"> </NavMenu>
         </el-menu>
       </el-col>
       <el-col :span="18" style="padding-left: 30px;padding-right: 30px">
         <el-container>
           <el-header style="border-bottom: solid #cccccc 1px;">
-            <el-button type="primary" @click="showAddSameLevelMenu()" size="medium" round>添加同级菜单</el-button>
-            <el-button type="primary" @click="showAddSubMenu()" size="medium" round>添加子菜单</el-button>
+            <el-button type="primary" @click="showAddSameLevelMenu()" size="medium" >添加同级菜单</el-button>
+            <el-button type="primary" @click="showAddSubMenu()" size="medium" >添加子菜单</el-button>
           </el-header>
           <el-main>
             <el-form :label-position="labelPosition" label-width="80px" :model="formData" ref="menuForm" size="medium">
@@ -227,6 +227,21 @@
   }
 </script>
 
-<style scoped>
+<style>
+
+  .MenuSetting .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
+  .MenuSetting .el-menu-item.is-active,
+  .MenuSetting .el-submenu.is-active{
+    background-color: #1DA028 !important;
+  }
+
+  .MenuSetting .el-menu-item i,
+  .MenuSetting .el-submenu__title i {
+    color: #1DA028 !important;
+  }
+
+  .MenuSetting .el-menu-item.is-active i{
+    color: white !important;
+  }
 
 </style>

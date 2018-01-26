@@ -10,9 +10,8 @@
           @select="menuSelected"
           backgroundColor="#1DA028"
           text-color="white"
-          active-text-color="white">
-          <NavMenu :menuData="topMenus" :showEnableOnly="showEnableOnly" :textColor="'white'" :iconColor="'white'"
-                   :iconSize="'24px'"></NavMenu>
+          active-text-color="#FFD04B">
+          <NavMenu class="TopMenu" :menuData="topMenus" :showEnableOnly="showEnableOnly" :iconSize="'24px'"></NavMenu>
         </el-menu>
       </div>
 
@@ -27,7 +26,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人资料</el-dropdown-item>
               <el-dropdown-item command="changePass">修改密码</el-dropdown-item>
-              <el-dropdown-item command="clearSession">清除缓存</el-dropdown-item>
+              <el-dropdown-item command="personalSetting">个人设置</el-dropdown-item>
               <el-dropdown-item command="logout">退出系统</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -45,8 +44,7 @@
         background-color="#F0F6F6"
         text-color="#1DA028"
         active-text-color="white">
-        <NavMenu :menuData="leftMenus" :showEnableOnly="showEnableOnly" :textColor="'#E4AE1C'" :iconColor="'#E4AE1C'"
-                 :iconSize="'16px'"></NavMenu>
+        <NavMenu class="LeftMenu" :menuData="leftMenus" :showEnableOnly="showEnableOnly" :iconSize="'16px'"></NavMenu>
       </el-menu>
     </div>
 
@@ -103,7 +101,7 @@
           } else {
             this.$notify.success({
               title: 'Info',
-              message: '对不起['+menu.alias+']暂未开通  您可以关注Minsx主页[www.minsx.com]随时获取项目进度!',
+              message: '对不起[' + menu.alias + ']暂未开通  您可以关注Minsx主页[www.minsx.com]随时获取项目进度!',
               showClose: false
             });
           }
@@ -114,8 +112,8 @@
         if ("logout" === command) {
           Cookies.remove('access_token', {domain: Config.COOKIE_DOMAIN, path: '/'});
           window.location.href = Config.LOGIN_URI;
-        } else if ('clearSession' === command) {
-          /*清除缓存*/
+        } else if ('personalSetting' === command) {
+          /*个人设置*/
         } else {
           let position = {};
           if (command === 'userInfo') {
@@ -262,25 +260,25 @@
 
   #nav {
     background-color: #F0F6F6;
-    width: 205px;
+    width: 206px;
     float: left;
     position: absolute;
-    top: 58px;
+    top: 60px;
     bottom: 50px;
     left: 0;
     overflow: hidden;
-    border-top: 2px solid #FFD04B;
+    border-top: 1px solid #FFD04B;
   }
 
   #section {
     float: left;
     position: absolute;
-    top: 58px;
+    top: 60px;
     bottom: 50px;
     left: 205px;
     right: 0;
     border-left: 1px solid #A9A9A9;
-    border-top: 2px solid #FFD04B;
+    border-top: 1px solid #FFD04B;
     overflow: auto;
   }
 
@@ -290,7 +288,7 @@
     top: 0;
     left: 0;
     height: 14px;
-    background-color: #F2F2F2;
+    background-color: #F0F6F6;
     border-bottom: 1px solid #A9A9A9;
     padding: 5px;
     overflow: hidden;
@@ -304,6 +302,7 @@
     bottom: 0;
     padding: 20px;
     overflow: auto;
+    background-color: #F8F8F8;
   }
 
   #footer {
@@ -321,7 +320,36 @@
     border-bottom: 5px solid #1DA028;
   }
 
-  .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active {
-    background-color: #2FA93A !important;
+  .TopMenu .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
+  .TopMenu .el-menu-item.is-active,
+  .TopMenu .el-submenu.is-active{
+    background-color: #178020 !important;
   }
+
+  .TopMenu .el-menu-item i,
+  .TopMenu .el-menu-item.is-active,
+  .TopMenu .el-submenu__title i,
+  .TopMenu .el-submenu__title {
+    color: white !important;
+  }
+
+  .LeftMenu .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
+  .LeftMenu .el-menu-item.is-active,
+  .LeftMenu .el-submenu.is-active{
+    background-color: #1DA028 !important;
+  }
+
+  .LeftMenu .el-menu-item i,
+  .LeftMenu .el-submenu__title i {
+    color: #1DA028 !important;
+  }
+
+  .LeftMenu .el-menu-item.is-active i{
+    color: white !important;
+  }
+
+  .TableHeader {
+    background-color:#F0F6F6 !important;
+  }
+
 </style>

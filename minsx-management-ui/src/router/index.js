@@ -3,7 +3,9 @@ import Router from 'vue-router'
 import Index from '@/components/Index'
 import UserInfo from '@/components/user/UserInfo'
 import ChangePass from '@/components/user/ChangePass'
-import MenuSetting from '@/components/system/MenuSetting'
+import MenuSetting from '@/components/setting/MenuSetting'
+import AuthSetting from '@/components/setting/AuthSetting'
+import ResourceMonitor from '@/components/monitor/ResourceMonitor'
 
 
 Vue.use(Router);
@@ -18,9 +20,15 @@ export default new Router({
       meta: {auth: true}
     },
     {
-      path: '/system/menu',
+      path: '/setting/menu',
       name: 'MenuSetting',
       component: MenuSetting,
+      meta: {auth: true}
+    },
+    {
+      path: '/setting/auth',
+      name: 'AuthSetting',
+      component: AuthSetting,
       meta: {auth: true}
     },
     {
@@ -33,6 +41,12 @@ export default new Router({
       path: '/user/changePass',
       name: 'ChangePass',
       component: ChangePass,
+      meta: {auth: true}
+    },
+    {
+      path: '/monitor/resource',
+      name: 'ResourceMonitor',
+      component: ResourceMonitor,
       meta: {auth: true}
     }
   ]

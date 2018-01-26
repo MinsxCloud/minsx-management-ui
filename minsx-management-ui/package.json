@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "echarts": "^4.0.2",
     "element-ui": "^2.0.5",
     "iview": "^2.8.0",
+    "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
     "vue": "^2.5.2",
+    "vue-echarts": "^3.0.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
