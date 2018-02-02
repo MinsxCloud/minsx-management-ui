@@ -17,11 +17,11 @@
         <el-input v-model="query.value" placeholder="请输入要搜索的内容"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">搜索</el-button>
+        <el-button type="primary" @click="search()">搜索</el-button>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="showAddAuthDialog">添加权限</el-button>
+        <el-button type="primary" @click="showAuthFormDialogWithClear(true)">添加权限</el-button>
       </el-form-item>
     </el-form>
 
@@ -67,13 +67,16 @@
         width="100">
         <template slot-scope="scope">
           <el-button @click="showAuthInfo(scope.row)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button @click="deleteAuth(scope.row.id)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <el-dialog title="添加权限" :visible.sync="dialogFormVisible" label-width="80px" width="600px">
       <el-form :model="form" style="padding-right: 10px;" size="medium" ref="authForm">
+        <el-form-item label="权限ID" prop="id" :label-width="formLabelWidth">
+          <el-input v-model="form.id" :disabled="true"></el-input>
+        </el-form-item>
         <el-form-item label="权限分类" prop="category" :label-width="formLabelWidth"
                       :rules="[{ required: true, message: '权限分类不能为空'}]">
           <el-input v-model="form.category"></el-input>
@@ -82,7 +85,10 @@
                       :rules="[{ required: true, message: '权限类型不能为空'}]">
           <el-select v-model="form.type" placeholder="请选择权限类型">
             <el-option label="URL" value="URL"></el-option>
+            <el-option label="DATA" value="DATA"></el-option>
             <el-option label="MENU" value="MENU"></el-option>
+            <el-option label="METHOD" value="METHOD"></el-option>
+            <el-option label="BUTTON" value="BUTTON"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="权限内容" prop="value" :label-width="formLabelWidth"
@@ -98,7 +104,7 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="cancelSaveAuth">取 消</el-button>
         <el-button type="primary" @click="saveAuth">确 定</el-button>
       </div>
     </el-dialog>
@@ -109,9 +115,9 @@
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
         :page-sizes="[10, 20, 30, 50,100]"
-        :page-size="10"
+        :page-size="eachPageSize"
         layout="sizes, prev, pager, next"
-        :total="1000">
+        :total="total">
       </el-pagination>
     </div>
 
@@ -152,34 +158,54 @@
         /***编辑权限表单***/
         dialogFormVisible: false,
         form: {
-          category: '',
-          type: '',
-          value: '',
+          id: null,
+          category: null,
+          type: null,
+          value: null,
           state: false,
-          description: ''
+          description: null,
         },
         formLabelWidth: '80px',
         /***分页***/
-        currentPage: 2
+        eachPageSize:10,
+        currentPage: 1,
+        total:0,
       }
     },
     methods: {
       getAuths() {
-        Axios.get('/auth/auths')
+        let param = {
+            page: this.currentPage-1,
+            size: this.eachPageSize
+        }
+        Axios.get('/auth/auths', param)
           .then(response => {
-            this.authList = response.data;
+            this.authList = response.data.content;
+            this.total=response.data.totalElements;
           }).catch(error => {
           console.log(error);
         });
       },
-      showAddAuthDialog() {
+      showAuthFormDialogWithClear(isClear) {
         this.dialogFormVisible = true;
+        if (isClear) {
+          this.resetForm();
+        }
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.eachPageSize=val;
+        this.getAuths();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val;
+        this.getAuths();
+      },
+      search() {
+        this.$notify.success({
+          title: '温馨提示：',
+          message: '搜索暂不可用!',
+          showClose: false
+        });
       },
       saveAuth() {
         this.$refs['authForm'].validate((valid) => {
@@ -193,7 +219,7 @@
                   });
                   this.getAuths();
                   this.dialogFormVisible = false;
-                  this.resetForm('authForm');
+                  this.resetForm();
                 }
               }).catch(error => {
               if (error.response.status === 404) {
@@ -207,20 +233,60 @@
           }
         });
       },
+      deleteAuth(id) {
+        this.$confirm('您确定要删除该权限吗, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Axios.delete('/auth/auths/' + id, null)
+            .then(response => {
+              if (response.status === 200) {
+                this.$message({
+                  message: '删除成功!',
+                  type: 'success'
+                });
+                this.getAuths();
+              }
+            }).catch(error => {
+            if (error.response.status === 404) {
+              this.$message.warning('该权限不存在,请尝试刷新页面后再进行操作');
+            } else {
+              this.$message.error('保存失败!');
+            }
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      cancelSaveAuth() {
+        this.dialogFormVisible = false;
+        this.resetForm();
+      },
       formToAuthEntity() {
         return {
+          id: this.form.id,
           category: this.form.category,
           type: this.form.type,
           value: this.form.value,
           state: this.form.state ? 'ENABLE' : 'DISABLE',
-          description: this.form.category
+          description: this.form.description
         };
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      resetForm() {
+        this.form = {};
       },
-      showAuthInfo(rowData){
-        alert(JSON.stringify(rowData));
+      showAuthInfo(rowData) {
+        this.form.id = rowData.id;
+        this.form.category = rowData.category;
+        this.form.type = rowData.type;
+        this.form.value = rowData.value;
+        this.form.state = rowData.state === 'ENABLE';
+        this.form.description = rowData.description;
+        this.showAuthFormDialogWithClear(false);
       }
     },
     created: function () {

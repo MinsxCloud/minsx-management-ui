@@ -100,7 +100,7 @@
             this.$router.push(menu.value);
           } else {
             this.$notify.success({
-              title: 'Info',
+              title: '温馨提示：',
               message: '对不起[' + menu.alias + ']暂未开通  您可以关注Minsx主页[www.minsx.com]随时获取项目进度!',
               showClose: false
             });
