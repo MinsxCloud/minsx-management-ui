@@ -5,7 +5,7 @@
 + 软件名称：Minsx-Management-UI
 + 版本号：1.0.0
 + 开发者：www.minsx.com
-+ 语言：HTML/CSS/JS
++ 语言：HTML/CSS/JS/VUE
 + 功能：提供一整套用户交互UI用于对米斯云平台管理和维护
 + 优点：与服务端分离,便于维护升级
 + 缺点：需独立部署,首次加载慢等特点
