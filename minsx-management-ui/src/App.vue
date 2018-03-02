@@ -49,12 +49,17 @@
     </div>
 
     <div id="section">
-      <div id="section-header">
+      <div id="positions">
         <!--内容顶部当前位置组件-->
         <Position :positions="positions"></Position>
       </div>
       <div id="section-content">
-        <router-view/>
+        <div id="section-header">
+          <blockquote class="minsx-quote">{{instruction}}</blockquote>
+       </div>
+        <div id="section-body">
+          <router-view/>
+        </div>
       </div>
     </div>
 
@@ -76,6 +81,7 @@
     name: 'app',
     data() {
       return {
+        instruction:'暂无使用说明',
         defaultOpeneds: [],
         showEnableOnly: true,
         topMenus: [],
@@ -98,6 +104,7 @@
         if (menu.type === 'LINK') {
           if (menu.value !== null && menu.value !== '') {
             this.$router.push(menu.value);
+            this.instruction=menu.description;
           } else {
             this.$notify.success({
               title: '温馨提示：',
@@ -122,12 +129,14 @@
               icon: 'el-icon-info',
               alias: '个人资料'
             };
+            this.instruction='使用说明：修改个人资料';
           } else if (command === 'changePass') {
             position = {
               value: '/user/changePass',
               icon: 'el-icon-view',
               alias: '修改密码'
             };
+            this.instruction='使用说明：修改密码';
           }
           this.positions = [position];
           this.$router.push(position.value);
@@ -282,7 +291,7 @@
     overflow: auto;
   }
 
-  #section #section-header {
+  #section #positions {
     position: absolute;
     right: 0;
     top: 0;
@@ -300,8 +309,22 @@
     top: 25px;
     left: 0;
     bottom: 0;
-    padding: 20px;
+    padding: 10px;
     overflow: auto;
+    background-color: #F8F8F8;
+  }
+
+  #section #section-content #section-header {
+    position: relative;
+    right: 0;
+    left: 0;
+  }
+
+  #section #section-content #section-body {
+    position: relative;
+    right: 0;
+    left: 0;
+    bottom: 0;
     background-color: #F8F8F8;
   }
 
@@ -322,7 +345,7 @@
 
   .TopMenu .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
   .TopMenu .el-menu-item.is-active,
-  .TopMenu .el-submenu.is-active{
+  .TopMenu .el-submenu.is-active {
     background-color: #178020 !important;
   }
 
@@ -335,7 +358,7 @@
 
   .LeftMenu .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
   .LeftMenu .el-menu-item.is-active,
-  .LeftMenu .el-submenu.is-active{
+  .LeftMenu .el-submenu.is-active {
     background-color: #1DA028 !important;
   }
 
@@ -344,12 +367,30 @@
     color: #1DA028 !important;
   }
 
-  .LeftMenu .el-menu-item.is-active i{
+  .LeftMenu .el-menu-item.is-active i {
     color: white !important;
   }
 
   .TableHeader {
-    background-color:#F0F6F6 !important;
+    background-color: #F0F6F6 !important;
+  }
+
+  .el-breadcrumb__inner{
+    color: #909399 !important;
+  }
+
+  .minsx-quote {
+    margin-bottom: 10px;
+    padding: 15px;
+    margin-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    line-height: 22px;
+    border-left: 5px solid #1DA028;
+    border-radius: 0 2px 2px 0;
+    font-size: 13px;
+    color: #909399;
+    background-color: #f2f2f2
   }
 
 </style>

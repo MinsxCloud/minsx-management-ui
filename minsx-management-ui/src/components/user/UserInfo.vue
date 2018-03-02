@@ -64,6 +64,8 @@
     methods: {
       onSubmit() {
         console.log('submit!');
+
+        alert('sssssss');
       },
       getUserName() {
         Axios.get('/user/currentUserInfo')

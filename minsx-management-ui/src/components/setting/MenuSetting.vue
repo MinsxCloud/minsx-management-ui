@@ -1,7 +1,6 @@
 <template>
   <div id="MenuSetting">
-
-    <el-row>
+   <el-row>
       <el-col :span="6" style="overflow: hidden">
         <el-menu
           default-active="monitor"
@@ -13,21 +12,23 @@
           background-color="#F0F6F6"
           text-color="#1DA028"
           active-text-color="white">
-          <NavMenu class="MenuSetting" :menuData="menuData" :showEnableOnly="showEnableOnly" :iconSize="'16px'"> </NavMenu>
+          <NavMenu class="MenuSetting" :menuData="menuData" :showEnableOnly="showEnableOnly"
+                   :iconSize="'16px'"></NavMenu>
         </el-menu>
       </el-col>
       <el-col :span="18" style="padding-left: 30px;padding-right: 30px">
         <el-container>
           <el-header style="border-bottom: solid #cccccc 1px;">
-            <el-button type="primary" @click="showAddSameLevelMenu()" size="medium" >添加同级菜单</el-button>
-            <el-button type="primary" @click="showAddSubMenu()" size="medium" >添加子菜单</el-button>
+            <el-button type="primary" @click="showAddSameLevelMenu()" size="medium">添加同级菜单</el-button>
+            <el-button type="primary" @click="showAddSubMenu()" size="medium">添加子菜单</el-button>
           </el-header>
           <el-main>
             <el-form :label-position="labelPosition" label-width="80px" :model="formData" ref="menuForm" size="medium">
-              <el-form-item label="菜单ID" prop="id" >
+              <el-form-item label="菜单ID" prop="id">
                 <el-input v-model.number="formData.id" disabled></el-input>
               </el-form-item>
-              <el-form-item label="父菜单ID" prop="parentMenuId" :rules="[{ required: true, message: '父菜单ID不能为空'},{ type: 'number', message: '父菜单ID必须为数字值'}]">
+              <el-form-item label="父菜单ID" prop="parentMenuId"
+                            :rules="[{ required: true, message: '父菜单ID不能为空'},{ type: 'number', message: '父菜单ID必须为数字值'}]">
                 <el-input v-model.number="formData.parentMenuId"></el-input>
               </el-form-item>
               <el-form-item label="系统名称" prop="name" :rules="[{ required: true, message: '系统名称不能为空'}]">
@@ -45,7 +46,7 @@
               <el-form-item label="值">
                 <el-input v-model="formData.value"></el-input>
               </el-form-item>
-              <el-form-item label="描述">
+              <el-form-item label="描述/说明">
                 <el-input type="textarea" v-model="formData.description"></el-input>
               </el-form-item>
               <el-form-item label="是否启用" :rules="[{ required: true, message: '是否启用不能为空'}]">
@@ -120,6 +121,7 @@
           console.log(error);
         });
       },
+
       updateMenu() {
         this.$refs['menuForm'].validate((valid) => {
           if (valid) {
@@ -133,12 +135,12 @@
                   this.getMenus();
                 }
               }).catch(error => {
-                if (error.response.status === 404) {
-                  this.$message.warning('该菜单不存在,请尝试刷新页面后再进行操作');
-                }else{
-                  this.$message.error('保存失败');
-                }
-              });
+              if (error.response.status === 404) {
+                this.$message.warning('该菜单不存在,请尝试刷新页面后再进行操作');
+              } else {
+                this.$message.error(error.response.data);
+              }
+            });
           } else {
             return false;
           }
@@ -166,7 +168,7 @@
         };
       },
       deleteMenu() {
-        if (typeof(this.formData.id) === "undefined" ||this.formData.id===null){
+        if (typeof(this.formData.id) === "undefined" || this.formData.id === null) {
           this.$message({
             type: 'warning',
             message: '请先选择指定菜单'
@@ -178,7 +180,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            Axios.delete('/menu/menus/'+this.formData.id,null)
+          Axios.delete('/menu/menus/' + this.formData.id, null)
             .then(response => {
               if (response.status === 200) {
                 this.$message({
@@ -191,8 +193,8 @@
                 this.$message.error('删除失败');
               }
             }).catch(error => {
-               this.$message.error('删除失败');
-            });
+            this.$message.error('删除失败');
+          });
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -201,7 +203,7 @@
         });
       },
       resetForm(formName) {
-         this.$refs[formName].resetFields();
+        this.$refs[formName].resetFields();
       },
       showAddSameLevelMenu() {
         let parentMenuId = this.formData.parentMenuId;
@@ -231,7 +233,7 @@
 
   .MenuSetting .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active,
   .MenuSetting .el-menu-item.is-active,
-  .MenuSetting .el-submenu.is-active{
+  .MenuSetting .el-submenu.is-active {
     background-color: #1DA028 !important;
   }
 
@@ -240,7 +242,7 @@
     color: #1DA028 !important;
   }
 
-  .MenuSetting .el-menu-item.is-active i{
+  .MenuSetting .el-menu-item.is-active i {
     color: white !important;
   }
 

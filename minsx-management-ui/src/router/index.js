@@ -5,6 +5,7 @@ import UserInfo from '@/components/user/UserInfo'
 import ChangePass from '@/components/user/ChangePass'
 import MenuSetting from '@/components/setting/MenuSetting'
 import AuthSetting from '@/components/setting/AuthSetting'
+import RoleSetting from '@/components/setting/RoleSetting'
 import ResourceMonitor from '@/components/monitor/ResourceMonitor'
 
 
@@ -29,6 +30,12 @@ export default new Router({
       path: '/setting/auth',
       name: 'AuthSetting',
       component: AuthSetting,
+      meta: {auth: true}
+    },
+    {
+      path: '/setting/role',
+      name: 'RoleSetting',
+      component: RoleSetting,
       meta: {auth: true}
     },
     {
