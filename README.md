@@ -1,8 +1,8 @@
-# minsx-management-ui
+# Minsx-Management-UI
 #### 是minsx家族的核心成员，主要负责对minsx后端管理的用户交互
 
 ### 项目说明
-+ 软件名称：minsx-management-ui
++ 软件名称：Minsx-Management-UI
 + 版本号：1.0.0
 + 开发者：www.minsx.com
 + 语言：HTML/CSS/JS
