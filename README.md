@@ -5,7 +5,7 @@
 + 软件名称：Minsx-Management-UI
 + 版本号：1.0.0
 + 开发者：www.minsx.com
-+ 语言：HTML/CSS/JS
++ 语言：HTML/CSS/JS/VUE/ELEMENT-UI
 + 功能：提供一整套用户交互UI用于对米斯云平台管理和维护
 + 优点：与服务端分离,便于维护升级
 + 缺点：需独立部署,首次加载慢等特点
@@ -17,3 +17,9 @@
 + NPM 包管理工具
 + WEB PACK 打包工具
 + NodeJS 用于基础环境及服务端渲染等
+
+### 项目开发与调试
+#### 项目采用NPM管理,常用的基本命令如下：
++ 安装项目: npm install
++ 运行项目: npm run dev
++ 打包项目: npm run build (查看报告请追加--report)
