@@ -52,7 +52,7 @@ server {
 ```
 + 项目采用前后端分离开发,打包后可以直托管于腾讯云COS阿里云OSS等对象存储中即可运行 
 
-######以下是腾讯COS配置:
+###### 以下是腾讯COS配置:
 + COS打包文件列表
 ![COS打包文件](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/COS打包文件.png "COS打包文件")
 + 如果您启用了history模式,则需要配置404指定到您的首页
