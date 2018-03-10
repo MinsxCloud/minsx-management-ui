@@ -19,7 +19,42 @@
 + NodeJS 用于基础环境及服务端渲染等
 
 ### 项目开发与调试
-#### 项目采用NPM管理,常用的基本命令如下：
+###### 项目采用NPM管理,常用的基本命令如下：
 + 安装项目: npm install
 + 运行项目: npm run dev
 + 打包项目: npm run build (查看报告请追加--report)
+
+### 项目打包运行
++ 基本运行方式为nginx指定打包后文件路径,如：
+```
+server {
+        listen 80;
+        server_name admin.minsx.com;
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+          root html;
+        }
+
+        root /project/Minsx-Management-UI/dist;
+        index index.html;
+
+        location / {
+          try_files $uri $uri/ @router;
+          index index.html;
+        }
+
+        location @router {
+          rewrite ^.*$ /index.html last;
+        }
+}
+
+```
++ 项目采用前后端分离开发,打包后可以直托管于腾讯云COS阿里云OSS等对象存储中即可运行
+######以下是腾讯COS配置:
++ COS打包文件列表
+![COS打包文件](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/COS打包文件.png "COS打包文件")
++ 如果您启用了history模式,则需要配置404指定到您的首页
+![404配置](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/404配置.png "404配置")
++ CND加速配置
+![CND加速](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/CND加速.png "CND加速")
