@@ -59,3 +59,10 @@ server {
 ![404配置](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/404配置.png "404配置")
 + CND加速配置
 ![CND加速](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/CND加速.png "CND加速")
+
+#### 项目截图 (V1.0版本)
+![V1.0项目截图](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/1.0/auth.png "V1.0项目截图")
+
+#### 项目截图 (V2.0版本)
+![V2.0项目截图](https://raw.githubusercontent.com/MinsxCloud/minsx-management-ui/master/doc/image/2.0/Management-UI-2.0.png "V2.0项目截图")
+
